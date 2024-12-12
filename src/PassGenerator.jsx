@@ -8,7 +8,7 @@ const PassGenerator = () => {
 
   const inputRef = useRef(null);
 
-  let passGenerator = () => {
+  const passGenerator = () => {
     let pass = "";
     const alphabets = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
     const nums = "0123456789";
@@ -16,48 +16,88 @@ const PassGenerator = () => {
 
     const allVals = alphabets + (numbers ? nums : "") + (chars ? specialChars : "");
 
-    for(let i = 0; i < length; i++) {
+    for (let i = 0; i < length; i++) {
       pass += allVals.charAt(Math.floor(Math.random() * allVals.length));
-  }
-  setPassword(pass);
-}
+    }
+    setPassword(pass);
+  };
 
-const copyToClipboard = () => {
+  const copyToClipboard = () => {
     inputRef.current.select();
-    document.execCommand('copy');
-};
+    document.execCommand("copy");
+  };
 
   useEffect(() => {
     passGenerator();
   }, [length, numbers, chars]);
 
   return (
-    <div>
-      <h1 className="text-center text-4xl mx-20 my-10">PassGenerator</h1>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-zinc-200 to-zinc-400">
+      <div className="bg-white shadow-lg rounded-lg p-8 max-w-md w-full">
+        <h1 className="text-center text-3xl font-bold text-gray-800 mb-6">Password Generator</h1>
 
-      <div className="bg-slate-300 w-[420px] rounded-lg mx-auto px-10 pt-5 flex flex-col justify-center gap-5">
-        <div className="flex justify-between">
-          <input
-            type="input"
-            readOnly
-            value={password} ref={inputRef}
-            className="w-3/4 p-2 rounded-md outline-none"
-          />
-          <button onClick={copyToClipboard} className="py-2 px-5 rounded-md bg-green-600 hover:bg-green-700 text-white">Copy</button>
-        </div> 
-        <div className="flex justify-between my-5">
-          <div className="flex justify-center items-center gap-1">
-            <input type="range" min={5} max={20} value={length} onChange={(e) => setLength(e.target.value)} />
-            <span>Length: {length}</span>
+        <div className="mb-4">
+          <div className="flex items-center space-x-2">
+            <input
+              type="text"
+              readOnly
+              value={password}
+              ref={inputRef}
+              className="flex-1 py-2 px-4 rounded-md border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            />
+            <button
+              onClick={copyToClipboard}
+              className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none"
+            >
+              Copy
+            </button>
           </div>
-          <div className="flex justify-center items-center gap-1">
-            <input type="checkbox" checked={numbers} onChange={() => setNumbers(!numbers)}/>
-            <span>Nums</span>
+        </div>
+
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <label htmlFor="length" className="text-gray-700 font-medium">Length: {length}</label>
+            <input
+              id="length"
+              type="range"
+              min={8}
+              max={20}
+              value={length}
+              onChange={(e) => setLength(e.target.value)}
+              className="w-2/3"
+            />
           </div>
-          <div className="flex justify-center items-center gap-1">
-            <input type="checkbox" checked={chars} onChange={() => setChars(!chars)}/>
-            <span>Chars</span>
+
+          <div className="flex items-center justify-between">
+            <label className="text-gray-700 font-medium flex items-center">
+              <input
+                type="checkbox"
+                checked={numbers}
+                onChange={() => setNumbers(!numbers)}
+                className="mr-2"
+              />
+              Include Numbers
+            </label>
+
+            <label className="text-gray-700 font-medium flex items-center">
+              <input
+                type="checkbox"
+                checked={chars}
+                onChange={() => setChars(!chars)}
+                className="mr-2"
+              />
+              Include Special Characters
+            </label>
           </div>
+        </div>
+
+        <div className="mt-6 text-center">
+          <button
+            onClick={passGenerator}
+            className="bg-indigo-500 text-white py-2 px-6 rounded-md shadow-md hover:bg-indigo-600 focus:outline-none"
+          >
+            Generate Password
+          </button>
         </div>
       </div>
     </div>
